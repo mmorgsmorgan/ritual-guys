@@ -1,14 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { RITUAL_GUYS_ADDRESS, RITUAL_GUYS_ABI, ritualChain } from '@/lib/wallet/ritual';
+
+const PENDING_START_KEY = 'ritual-guys-pending-start';
 
 export function GameGate({ children }: { children: React.ReactNode }) {
   const { address, isConnected } = useAccount();
   const { openConnectModal } = useConnectModal();
   const [gameStarted, setGameStarted] = useState(false);
+  const [pendingFromStorage, setPendingFromStorage] = useState(false);
 
   const { data: isRegistered, isLoading: checkingReg } = useReadContract({
     address: RITUAL_GUYS_ADDRESS,
@@ -18,6 +21,59 @@ export function GameGate({ children }: { children: React.ReactNode }) {
     chainId: ritualChain.id,
     query: { enabled: isConnected && !!address },
   });
+
+  const { data: playerData, refetch: refetchPlayer } = useReadContract({
+    address: RITUAL_GUYS_ADDRESS,
+    abi: RITUAL_GUYS_ABI,
+    functionName: 'players',
+    args: address ? [address] : undefined,
+    chainId: ritualChain.id,
+    query: { enabled: isConnected && !!address },
+  });
+
+  const gamesPlayed = playerData ? Number(playerData[1]) : 0;
+
+  // On mount, detect pending startGame from sessionStorage
+  useEffect(() => {
+    if (!isConnected || !address) return;
+    try {
+      const stored = sessionStorage.getItem(PENDING_START_KEY);
+      if (!stored) return;
+      const { addr } = JSON.parse(stored);
+      if (addr !== address) {
+        sessionStorage.removeItem(PENDING_START_KEY);
+        return;
+      }
+      setPendingFromStorage(true);
+    } catch {
+      sessionStorage.removeItem(PENDING_START_KEY);
+    }
+  }, [isConnected, address]);
+
+  // Poll the contract while we have a pending start from storage
+  useEffect(() => {
+    if (!pendingFromStorage || !playerData) return;
+    try {
+      const stored = sessionStorage.getItem(PENDING_START_KEY);
+      if (!stored) { setPendingFromStorage(false); return; }
+      const { baseline } = JSON.parse(stored);
+      if (gamesPlayed > baseline) {
+        sessionStorage.removeItem(PENDING_START_KEY);
+        setPendingFromStorage(false);
+        setGameStarted(true);
+        return;
+      }
+    } catch {
+      sessionStorage.removeItem(PENDING_START_KEY);
+      setPendingFromStorage(false);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      refetchPlayer();
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [pendingFromStorage, playerData, gamesPlayed, refetchPlayer]);
 
   const { writeContract: writeRegister, data: regTxHash, isPending: regSigning } = useWriteContract();
   const { isLoading: regConfirming, isSuccess: regConfirmed } = useWaitForTransactionReceipt({
@@ -34,7 +90,11 @@ export function GameGate({ children }: { children: React.ReactNode }) {
   const registered = isRegistered || regConfirmed;
 
   if (isConnected && registered && (gameStarted || startConfirmed)) {
-    if (!gameStarted && startConfirmed) setGameStarted(true);
+    if (!gameStarted && startConfirmed) {
+      sessionStorage.removeItem(PENDING_START_KEY);
+      setPendingFromStorage(false);
+      setGameStarted(true);
+    }
     return <>{children}</>;
   }
 
@@ -48,6 +108,11 @@ export function GameGate({ children }: { children: React.ReactNode }) {
   };
 
   const handleStartGame = () => {
+    sessionStorage.setItem(PENDING_START_KEY, JSON.stringify({
+      addr: address,
+      baseline: gamesPlayed,
+    }));
+    setPendingFromStorage(true);
     writeStart({
       address: RITUAL_GUYS_ADDRESS,
       abi: RITUAL_GUYS_ABI,
@@ -56,7 +121,7 @@ export function GameGate({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const isBusy = regSigning || regConfirming || startSigning || startConfirming;
+  const isBusy = regSigning || regConfirming || startSigning || startConfirming || pendingFromStorage;
 
   return (
     <div className="relative w-full max-w-[500px] mx-auto aspect-[9/16] rounded-3xl overflow-hidden flex items-center justify-center"

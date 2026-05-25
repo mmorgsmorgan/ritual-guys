@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useGameStore } from '@/lib/store/gameStore';
 import { EVOLUTION_TIERS } from '@game/config/evolution';
-import { EventBus } from '@game/EventBus';
 import { RITUAL_GUYS_ADDRESS, RITUAL_GUYS_ABI, ritualChain } from '@/lib/wallet/ritual';
 
 export function EndScreen() {
@@ -15,6 +14,7 @@ export function EndScreen() {
 
   const [displayName, setDisplayName] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [skipped, setSkipped] = useState(false);
 
   const { writeContract, data: txHash, isPending: isSigning, error: writeError } = useWriteContract();
 
@@ -43,10 +43,13 @@ export function EndScreen() {
 
   const handlePlayAgain = () => {
     setSubmitted(false);
+    setSkipped(false);
     setDisplayName('');
     resetGame();
     window.location.reload();
   };
+
+  const showScoreForm = !isConfirmed && !skipped;
 
   return (
     <div
@@ -116,8 +119,7 @@ export function EndScreen() {
           ))}
         </div>
 
-        {/* Score submission — must sign before replay */}
-        {!isConfirmed && (
+        {showScoreForm && (
           <div className="mb-4 space-y-3">
             <input
               type="text"
@@ -150,34 +152,37 @@ export function EndScreen() {
               {isSigning ? 'CONFIRM IN WALLET...' : isConfirming ? 'SUBMITTING...' : 'SAVE SCORE'}
             </button>
 
-            {!displayName.trim() && !isSigning && !isConfirming && (
-              <p className="text-white/30 text-[10px] font-body">
-                Enter a name to submit your score on-chain
-              </p>
-            )}
+            <button
+              onClick={() => setSkipped(true)}
+              disabled={isSigning || isConfirming}
+              className="w-full py-2 text-xs font-body font-bold text-white/30 hover:text-white/60 transition-colors uppercase tracking-wider disabled:opacity-30"
+              style={{ pointerEvents: 'auto' }}
+            >
+              Skip & Play Again
+            </button>
           </div>
         )}
 
         {isConfirmed && (
-          <>
-            <div className="mb-4 py-3 rounded-xl text-center"
-              style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)' }}>
-              <p className="text-emerald-400 font-display text-sm">SCORE SUBMITTED ON-CHAIN</p>
-            </div>
+          <div className="mb-4 py-3 rounded-xl text-center"
+            style={{ background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)' }}>
+            <p className="text-emerald-400 font-display text-sm">SCORE SUBMITTED ON-CHAIN</p>
+          </div>
+        )}
 
-            <button
-              onClick={handlePlayAgain}
-              className="w-full py-3 rounded-full font-display text-xl text-white"
-              style={{
-                pointerEvents: 'auto',
-                background: `linear-gradient(135deg, ${color}, ${color}CC)`,
-                boxShadow: `0 4px 0 rgba(0,0,0,0.3), 0 6px 20px ${color}40`,
-                border: '3px solid rgba(255,255,255,0.2)',
-              }}
-            >
-              PLAY AGAIN
-            </button>
-          </>
+        {(isConfirmed || skipped) && (
+          <button
+            onClick={handlePlayAgain}
+            className="w-full py-3 rounded-full font-display text-xl text-white"
+            style={{
+              pointerEvents: 'auto',
+              background: `linear-gradient(135deg, ${color}, ${color}CC)`,
+              boxShadow: `0 4px 0 rgba(0,0,0,0.3), 0 6px 20px ${color}40`,
+              border: '3px solid rgba(255,255,255,0.2)',
+            }}
+          >
+            PLAY AGAIN
+          </button>
         )}
 
         <button
