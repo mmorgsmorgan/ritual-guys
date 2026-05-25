@@ -1,0 +1,363 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-bg: #1B0A3C;
+  --color-bg-light: #2A1254;
+  --color-bg-surface: #3D1F70;
+  --color-bg-card: #4A2888;
+
+  --color-candy-pink: #FF5CAD;
+  --color-candy-yellow: #FFD93D;
+  --color-candy-orange: #FF8A50;
+  --color-candy-green: #4AE68A;
+  --color-candy-blue: #4DA6FF;
+  --color-candy-purple: #A855F7;
+  --color-candy-red: #FF4757;
+  --color-candy-cyan: #22D3EE;
+  --color-candy-white: #FFF5F5;
+
+  --color-tier-1a: #DAA520;
+  --color-tier-1b: #C0C0C0;
+  --color-tier-1c: #2D1B69;
+  --color-tier-2a: #FFFFFF;
+  --color-tier-2b: #9B30FF;
+  --color-tier-2c: #E8E8E8;
+  --color-tier-3a: #FFD700;
+  --color-tier-3b: #307287;
+  --color-tier-3c: #4169E1;
+  --color-tier-4a: #B39DDB;
+  --color-tier-4b: #8B4513;
+  --color-tier-5a: #39FF14;
+  --color-tier-5b: #BF00FF;
+  --color-tier-6a: #87CEEB;
+  --color-tier-6b: #00FFFF;
+  --color-tier-7a: #FFD700;
+  --color-tier-7b: #FFDF00;
+  --color-tier-8a: #E6E6FA;
+  --color-tier-8b: #D8BFD8;
+
+  --font-display: 'Fredoka One', 'Lilita One', 'Bungee', 'Impact', system-ui, sans-serif;
+  --font-body: 'Nunito', 'Quicksand', system-ui, sans-serif;
+  --font-mono: 'Space Mono', 'JetBrains Mono', ui-monospace, monospace;
+}
+
+@font-face {
+  font-family: 'Fredoka One';
+  src: url('https://fonts.gstatic.com/s/fredokaone/v14/k3kUo8kEI-tA1RRcTZGmTmHB.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('https://fonts.gstatic.com/s/nunito/v26/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshRTY9jo7eTWk.woff2') format('woff2');
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(168, 85, 247, 0.25) 0%, transparent 60%),
+    radial-gradient(ellipse at 70% 80%, rgba(255, 92, 173, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(34, 211, 238, 0.08) 0%, transparent 60%);
+  color: #fff;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-candy-pink);
+  color: white;
+}
+
+/* ========================================
+   GAME PILL — rounded cartoon badge
+   ======================================== */
+
+.game-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  border: 3px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 4px 0 rgba(0, 0, 0, 0.25),
+    0 6px 20px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(8px);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.game-pill:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+.game-pill-score {
+  background: linear-gradient(135deg, #FFD93D 0%, #FFAB40 100%);
+  color: #5D3A00;
+}
+
+.game-pill-chain {
+  background: linear-gradient(135deg, #FF5CAD 0%, #FF3D8B 100%);
+  color: #fff;
+}
+
+.game-pill-next {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.game-pill-tier {
+  background: rgba(168, 85, 247, 0.3);
+  border-color: rgba(168, 85, 247, 0.6);
+  color: #E0C3FC;
+}
+
+/* ========================================
+   CARD — glass morphism with pop
+   ======================================== */
+
+.game-card {
+  background: linear-gradient(145deg, rgba(74, 40, 136, 0.9) 0%, rgba(27, 10, 60, 0.95) 100%);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 60px rgba(168, 85, 247, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+}
+
+/* ========================================
+   STICKER / TOY UTILITIES (kept for other pages)
+   ======================================== */
+
+.sticker {
+  background: var(--color-bg-card);
+  border: 4px solid #fff;
+  border-radius: 20px;
+  box-shadow:
+    6px 6px 0px #000,
+    0 0 0 2px #000;
+  position: relative;
+  overflow: hidden;
+}
+
+.sticker-sm {
+  background: var(--color-bg-card);
+  border: 3px solid #fff;
+  border-radius: 14px;
+  box-shadow:
+    4px 4px 0px #000,
+    0 0 0 1.5px #000;
+}
+
+.sticker-pink {
+  background: linear-gradient(135deg, #FF5CAD 0%, #FF8A50 100%);
+  border: 4px solid #fff;
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px #000, 0 0 0 2px #000;
+}
+
+.sticker-yellow {
+  background: linear-gradient(135deg, #FFD93D 0%, #FF8A50 100%);
+  border: 4px solid #fff;
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px #000, 0 0 0 2px #000;
+  color: #1a1040;
+}
+
+.sticker-blue {
+  background: linear-gradient(135deg, #4DA6FF 0%, #22D3EE 100%);
+  border: 4px solid #fff;
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px #000, 0 0 0 2px #000;
+}
+
+.sticker-green {
+  background: linear-gradient(135deg, #4AE68A 0%, #22D3EE 100%);
+  border: 4px solid #fff;
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px #000, 0 0 0 2px #000;
+}
+
+.sticker-purple {
+  background: linear-gradient(135deg, #A855F7 0%, #FF5CAD 100%);
+  border: 4px solid #fff;
+  border-radius: 20px;
+  box-shadow: 6px 6px 0px #000, 0 0 0 2px #000;
+}
+
+/* Chunky text outlines */
+.text-outline {
+  -webkit-text-stroke: 3px #000;
+  paint-order: stroke fill;
+  text-shadow: 4px 4px 0px #000;
+}
+
+.text-outline-sm {
+  -webkit-text-stroke: 2px #000;
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0px #000;
+}
+
+/* Glossy bubble effect */
+.glossy {
+  position: relative;
+  overflow: hidden;
+}
+.glossy::after {
+  content: '';
+  position: absolute;
+  top: 8%;
+  left: 15%;
+  width: 50%;
+  height: 35%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 100%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid currentColor;
+}
+
+.halftone {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes bounce-in {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.15); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes bounce-hover {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+@keyframes sunburst {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes shake-hard {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px) rotate(-2deg); }
+  40% { transform: translateX(6px) rotate(2deg); }
+  60% { transform: translateX(-4px) rotate(-1deg); }
+  80% { transform: translateX(4px) rotate(1deg); }
+}
+
+@keyframes float-bounce {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  25% { transform: translateY(-10px) rotate(1deg); }
+  50% { transform: translateY(-4px) rotate(2deg); }
+  75% { transform: translateY(-12px) rotate(-1deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 8px currentColor); }
+  50% { filter: drop-shadow(0 0 20px currentColor); }
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-bounce-in { animation: bounce-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
+.animate-wiggle { animation: wiggle 0.8s ease-in-out infinite; }
+.animate-bounce-hover { animation: bounce-hover 2s ease-in-out infinite; }
+.animate-spin-slow { animation: spin-slow 20s linear infinite; }
+.animate-pop { animation: pop 0.3s ease-in-out; }
+.animate-sunburst { animation: sunburst 30s linear infinite; }
+.animate-shake { animation: shake-hard 0.4s ease-in-out; }
+.animate-float-bounce { animation: float-bounce 3s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-slide-up { animation: slide-up 0.4s ease-out; }
+
+.btn-bouncy {
+  transition: transform 0.15s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.15s ease;
+}
+.btn-bouncy:hover {
+  transform: translateY(-4px) scale(1.03);
+}
+.btn-bouncy:active {
+  transform: translateY(2px) scale(0.97);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.3) !important;
+}
+
+.tilt-hover {
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+.tilt-hover:hover {
+  transform: rotate(-2deg) scale(1.04);
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+}
