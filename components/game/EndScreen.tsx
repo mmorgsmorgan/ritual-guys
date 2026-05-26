@@ -185,12 +185,13 @@ export function EndScreen() {
           </button>
         )}
 
-        <button
-          className="w-full py-2 mt-2 text-xs font-body font-bold text-white/30 hover:text-white/60 transition-colors uppercase tracking-wider"
+        <a
+          href="/leaderboard"
+          className="block w-full py-2 mt-2 text-xs font-body font-bold text-white/30 hover:text-white/60 transition-colors uppercase tracking-wider text-center"
           style={{ pointerEvents: 'auto' }}
         >
           View Leaderboard
-        </button>
+        </a>
       </div>
     </div>
   );
