@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useReadContract } from 'wagmi';
+import { useReadContract } from '@/lib/wallet/hooks';
 import { EVOLUTION_TIERS } from '@game/config/evolution';
 import { RITUAL_GUYS_ADDRESS, RITUAL_GUYS_ABI, ritualChain } from '@/lib/wallet/ritual';
 

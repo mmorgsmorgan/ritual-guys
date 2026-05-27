@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from '@/lib/wallet/hooks';
 import { useGameStore } from '@/lib/store/gameStore';
 import { EVOLUTION_TIERS } from '@game/config/evolution';
 import { EventBus } from '@game/EventBus';

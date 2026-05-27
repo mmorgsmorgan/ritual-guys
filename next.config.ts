@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
       path: false,
       net: false,
       tls: false,
+      ws: false,
+      'bufferutil': false,
+      'utf-8-validate': false,
     };
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
     config.resolve.alias = {
