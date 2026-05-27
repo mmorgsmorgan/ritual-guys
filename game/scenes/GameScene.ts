@@ -96,11 +96,13 @@ export class GameScene extends Phaser.Scene {
     this.onRestartHandler = () => {
       if (this._restarting) return;
       this._restarting = true;
+      this.tweens.killAll();
+      this.time.removeAllEvents();
+      this.cameras.main.stopFollow();
       this.cameras.main.setZoom(1);
       this.cameras.main.setScroll(0, 0);
-      setTimeout(() => {
-        this.scene.restart();
-      }, 100);
+      this.cameras.main.setAlpha(1);
+      this.scene.restart();
     };
 
     EventBus.on('merge', this.onMergeHandler);
@@ -244,6 +246,7 @@ export class GameScene extends Phaser.Scene {
     EventBus.off('merge', this.onMergeHandler);
     EventBus.off('restart-game', this.onRestartHandler);
     this.events.off('shutdown', this.shutdown, this);
+    this.tweens.killAll();
     this.spawnSystem?.destroy();
     this.audioManager?.destroy();
     this.effectsGraphics?.destroy();
@@ -251,5 +254,6 @@ export class GameScene extends Phaser.Scene {
       ball.destroy();
     }
     this.balls.clear();
+    this.matter?.world?.remove(this.matter.world.getAllBodies());
   }
 }
