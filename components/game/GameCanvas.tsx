@@ -44,7 +44,7 @@ export default function GameCanvas() {
           opacity: 0.1,
         }}
       />
-      <PhaserMount />
+      <PhaserMount key={gamesPlayed} />
       <GameHUD />
       <EndScreen key={gamesPlayed} />
     </div>
