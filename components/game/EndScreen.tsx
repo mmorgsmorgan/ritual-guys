@@ -43,11 +43,7 @@ export function EndScreen() {
   };
 
   const handlePlayAgain = () => {
-    setSubmitted(false);
-    setSkipped(false);
-    setDisplayName('');
-    resetGame();
-    EventBus.emit('restart-game');
+    window.location.reload();
   };
 
   const showScoreForm = !isConfirmed && !skipped;
