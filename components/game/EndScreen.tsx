@@ -9,10 +9,8 @@ import { RITUAL_GUYS_ADDRESS, RITUAL_GUYS_ABI, ritualChain } from '@/lib/wallet/
 export function EndScreen() {
   const isGameOver = useGameStore((s) => s.isGameOver);
   const gameStats = useGameStore((s) => s.gameStats);
-  const gamesPlayed = useGameStore((s) => s.gamesPlayed);
   const resetGame = useGameStore((s) => s.resetGame);
   const { isConnected } = useAccount();
-  console.log('[EndScreen] render', { isGameOver, hasStats: !!gameStats, gamesPlayed });
 
   const [displayName, setDisplayName] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -44,12 +42,10 @@ export function EndScreen() {
   };
 
   const handlePlayAgain = () => {
-    console.log('[EndScreen] handlePlayAgain CLICKED');
     setSubmitted(false);
     setSkipped(false);
     setDisplayName('');
     resetGame();
-    console.log('[EndScreen] after resetGame, store:', useGameStore.getState());
   };
 
   const showScoreForm = !isConfirmed && !skipped;
