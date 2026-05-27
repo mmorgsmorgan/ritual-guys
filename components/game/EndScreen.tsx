@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useGameStore } from '@/lib/store/gameStore';
 import { EVOLUTION_TIERS } from '@game/config/evolution';
+import { EventBus } from '@game/EventBus';
 import { RITUAL_GUYS_ADDRESS, RITUAL_GUYS_ABI, ritualChain } from '@/lib/wallet/ritual';
 
 export function EndScreen() {
@@ -46,7 +47,7 @@ export function EndScreen() {
     setSkipped(false);
     setDisplayName('');
     resetGame();
-    window.location.reload();
+    EventBus.emit('restart-game');
   };
 
   const showScoreForm = !isConfirmed && !skipped;

@@ -1,4 +1,4 @@
-import { defineChain, type Address } from 'viem';
+import { defineChain, createPublicClient, http, type Address } from 'viem';
 
 export const ritualChain = defineChain({
   id: 1979,
@@ -13,6 +13,11 @@ export const ritualChain = defineChain({
 });
 
 export const RITUAL_GUYS_ADDRESS = '0x8232Da00022eCda216ecFe0Dc6084b698f72D767' as Address;
+
+export const ritualClient = createPublicClient({
+  chain: ritualChain,
+  transport: http(),
+});
 
 export const RITUAL_GUYS_ABI = [
   {
