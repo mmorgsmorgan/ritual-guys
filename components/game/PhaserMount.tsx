@@ -7,14 +7,17 @@ export default function PhaserMount() {
   const gameRef = useRef<Phaser.Game | null>(null);
 
   useEffect(() => {
+    console.log('[PhaserMount] effect run, gameRef:', !!gameRef.current);
     if (gameRef.current || !containerRef.current) return;
 
     import('@game/main').then(({ createGame }) => {
       if (!containerRef.current || gameRef.current) return;
+      console.log('[PhaserMount] creating new Phaser game');
       gameRef.current = createGame(containerRef.current);
     });
 
     return () => {
+      console.log('[PhaserMount] cleanup, destroying game');
       if (gameRef.current) {
         gameRef.current.destroy(true);
         gameRef.current = null;

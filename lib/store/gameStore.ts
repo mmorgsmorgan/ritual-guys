@@ -41,9 +41,13 @@ export const useGameStore = create<GameState>((set) => ({
   setHighestTier: (tier) => set({ highestTier: tier }),
   setChain: (count, multiplier) => set({ chainCount: count, chainMultiplier: multiplier }),
   clearChain: () => set({ chainCount: 0, chainMultiplier: 1 }),
-  setGameOver: (stats) => set({ isGameOver: true, gameStats: stats }),
+  setGameOver: (stats) => {
+    console.log('[gameStore] setGameOver called', new Error().stack?.split('\n').slice(1, 4));
+    set({ isGameOver: true, gameStats: stats });
+  },
   setNextBallTier: (tierId) => set({ nextBallTierId: tierId }),
-  resetGame: () =>
+  resetGame: () => {
+    console.log('[gameStore] resetGame called');
     set((state) => ({
       score: 0,
       highestTier: 0,
@@ -53,5 +57,6 @@ export const useGameStore = create<GameState>((set) => ({
       gameStats: null,
       nextBallTierId: 1,
       gamesPlayed: state.gamesPlayed + 1,
-    })),
+    }));
+  },
 }));
