@@ -12,7 +12,7 @@ export const ritualChain = defineChain({
   },
 });
 
-export const RITUAL_GUYS_ADDRESS = '0x8232Da00022eCda216ecFe0Dc6084b698f72D767' as Address;
+export const RITUAL_GUYS_ADDRESS = '0xD3104401a0907736b8a94eFeA9144E3F145f4C24' as Address;
 
 export const ritualClient = createPublicClient({
   chain: ritualChain,
